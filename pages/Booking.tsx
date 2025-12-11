@@ -16,13 +16,14 @@ const Booking: React.FC = () => {
   const [blockedDates, setBlockedDates] = useState<BlockedDate[]>([]);
   const [clientName, setClientName] = useState('');
   const [existingBookings, setExistingBookings] = useState<BookingType[]>([]);
-  const [isClientMode, setIsClientMode] = useState(false);
+  const [isClientMode, setIsClientMode] = useState(true); // Padrão seguro = TRUE
 
   // Load initial data
   useEffect(() => {
     // Check user role
     const role = localStorage.getItem('userRole');
-    const isClient = role === 'client';
+    // Se NÃO for admin, é cliente (segurança por padrão)
+    const isClient = role !== 'admin';
     setIsClientMode(isClient);
 
     // Load existing data

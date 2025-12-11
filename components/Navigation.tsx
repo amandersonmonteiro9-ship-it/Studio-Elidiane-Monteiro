@@ -5,13 +5,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState(true); // Padrão agora é TRUE (Cliente) por segurança
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // Verifica se é cliente a cada mudança de rota
+  // Verifica o papel do usuário a cada mudança de rota
   useEffect(() => {
     const role = localStorage.getItem('userRole');
-    setIsClient(role === 'client');
+    // Se NÃO for explicitamente 'admin', tratamos como cliente (segurança por padrão)
+    setIsClient(role !== 'admin');
   }, [location]);
 
   const handleAdminLogin = () => {
@@ -19,10 +20,10 @@ const Navigation: React.FC = () => {
   };
 
   const confirmLogin = () => {
-    // Remove o modo cliente
-    localStorage.removeItem('userRole');
+    // Define explicitamente como admin
+    localStorage.setItem('userRole', 'admin');
     setShowLoginModal(false);
-    // Volta para o painel admin
+    // Vai para o painel admin
     navigate('/admin');
   };
 
@@ -30,7 +31,7 @@ const Navigation: React.FC = () => {
 
   return (
     <>
-      {/* Modal de Confirmação de Login */}
+      {/* Modal de Confirmação de Acesso Admin */}
       {showLoginModal && (
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-xl p-6 shadow-2xl max-w-xs w-full animate-fade-in border border-studio-pink/20">
@@ -39,9 +40,9 @@ const Navigation: React.FC = () => {
                 <Lock size={24} className="text-studio-dark" />
               </div>
             </div>
-            <h3 className="font-serif text-lg font-bold text-studio-dark mb-2 text-center">Voltar para Admin?</h3>
+            <h3 className="font-serif text-lg font-bold text-studio-dark mb-2 text-center">Acesso Administrativo</h3>
             <p className="text-sm text-studio-gray mb-6 text-center">
-              Você sairá do modo de visualização do cliente e voltará para o painel de gerenciamento.
+              Deseja acessar o painel de gerenciamento do Studio?
             </p>
             <div className="flex gap-3">
               <button 
@@ -54,7 +55,7 @@ const Navigation: React.FC = () => {
                 onClick={confirmLogin}
                 className="flex-1 py-3 bg-studio-dark text-white rounded-lg font-bold text-sm hover:bg-black transition-colors"
               >
-                Sim, Sair
+                Acessar
               </button>
             </div>
           </div>
@@ -68,7 +69,7 @@ const Navigation: React.FC = () => {
             <span className="text-[10px] font-sans mt-1">Início</span>
           </Link>
           
-          {/* Mostra Agenda (Calendar) apenas se NÃO for cliente */}
+          {/* Mostra Agenda (Calendar) apenas se for ADMIN (isClient false) */}
           {!isClient && (
             <Link to="/booking" className={`flex flex-col items-center transition-all duration-300 ${isActive('/booking')}`}>
               <Calendar size={24} strokeWidth={1.5} />
@@ -81,7 +82,7 @@ const Navigation: React.FC = () => {
             <span className="text-[10px] font-sans mt-1">Avaliar</span>
           </Link>
 
-          {/* Se Admin: Mostra Admin. Se Cliente: Mostra Login para voltar */}
+          {/* Se Admin: Mostra botão Admin. Se Cliente: Mostra Login */}
           {!isClient ? (
             <Link to="/admin" className={`flex flex-col items-center transition-all duration-300 ${isActive('/admin')}`}>
               <UserCog size={24} strokeWidth={1.5} />
