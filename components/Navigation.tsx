@@ -1,61 +1,102 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Home, UserCog, Camera, Lock } from 'lucide-react';
+import { Calendar, Home, UserCog, Camera, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isClient, setIsClient] = useState(true); // Padrão agora é TRUE (Cliente) por segurança
+  const [isClient, setIsClient] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  
+  // Estados para o login com senha
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Verifica o papel do usuário a cada mudança de rota
   useEffect(() => {
     const role = localStorage.getItem('userRole');
-    // Se NÃO for explicitamente 'admin', tratamos como cliente (segurança por padrão)
     setIsClient(role !== 'admin');
   }, [location]);
 
-  const handleAdminLogin = () => {
+  const handleOpenLogin = () => {
+    setPassword('');
+    setError('');
     setShowLoginModal(true);
   };
 
-  const confirmLogin = () => {
-    // Define explicitamente como admin
-    localStorage.setItem('userRole', 'admin');
+  const handleLoginSubmit = () => {
+    if (password === '12deJunho@') {
+      localStorage.setItem('userRole', 'admin');
+      setIsClient(false);
+      setShowLoginModal(false);
+      navigate('/admin');
+    } else {
+      setError('Senha incorreta. Tente novamente.');
+    }
+  };
+
+  const handleCloseModal = () => {
     setShowLoginModal(false);
-    // Vai para o painel admin
-    navigate('/admin');
+    setPassword('');
+    setError('');
   };
 
   const isActive = (path: string) => location.pathname === path ? 'text-studio-dark scale-110' : 'text-studio-gray hover:text-studio-pink';
 
   return (
     <>
-      {/* Modal de Confirmação de Acesso Admin */}
+      {/* Modal de Login com Senha */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-xl p-6 shadow-2xl max-w-xs w-full animate-fade-in border border-studio-pink/20">
+        <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-xl p-6 shadow-2xl max-w-xs w-full border border-studio-pink/20">
             <div className="flex justify-center mb-4">
               <div className="w-12 h-12 bg-studio-beige rounded-full flex items-center justify-center">
                 <Lock size={24} className="text-studio-dark" />
               </div>
             </div>
-            <h3 className="font-serif text-lg font-bold text-studio-dark mb-2 text-center">Acesso Administrativo</h3>
-            <p className="text-sm text-studio-gray mb-6 text-center">
-              Deseja acessar o painel de gerenciamento do Studio?
+            
+            <h3 className="font-serif text-lg font-bold text-studio-dark mb-1 text-center">Área Restrita</h3>
+            <p className="text-xs text-studio-gray mb-4 text-center">
+              Acesso exclusivo para administração.
             </p>
+
+            <div className="mb-4 relative">
+              <input 
+                type={showPassword ? "text" : "password"}
+                placeholder="Digite a senha"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError('');
+                }}
+                className="w-full p-3 pr-10 rounded-lg border border-gray-200 text-sm focus:border-studio-pink outline-none transition-colors"
+                onKeyDown={(e) => e.key === 'Enter' && handleLoginSubmit()}
+              />
+              <button 
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-400"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+
+            {error && (
+              <p className="text-red-500 text-xs text-center mb-4 font-bold">{error}</p>
+            )}
+
             <div className="flex gap-3">
               <button 
-                onClick={() => setShowLoginModal(false)}
+                onClick={handleCloseModal}
                 className="flex-1 py-3 border border-gray-200 rounded-lg text-gray-500 font-bold text-sm hover:bg-gray-50 transition-colors"
               >
                 Cancelar
               </button>
               <button 
-                onClick={confirmLogin}
+                onClick={handleLoginSubmit}
                 className="flex-1 py-3 bg-studio-dark text-white rounded-lg font-bold text-sm hover:bg-black transition-colors"
               >
-                Acessar
+                Entrar
               </button>
             </div>
           </div>
@@ -69,7 +110,7 @@ const Navigation: React.FC = () => {
             <span className="text-[10px] font-sans mt-1">Início</span>
           </Link>
           
-          {/* Mostra Agenda (Calendar) apenas se for ADMIN (isClient false) */}
+          {/* Mostra Agenda apenas se for ADMIN */}
           {!isClient && (
             <Link to="/booking" className={`flex flex-col items-center transition-all duration-300 ${isActive('/booking')}`}>
               <Calendar size={24} strokeWidth={1.5} />
@@ -90,7 +131,7 @@ const Navigation: React.FC = () => {
             </Link>
           ) : (
             <button 
-              onClick={handleAdminLogin}
+              onClick={handleOpenLogin}
               className="flex flex-col items-center transition-all duration-300 text-studio-gray hover:text-studio-dark"
             >
               <Lock size={24} strokeWidth={1.5} />
