@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- Título do Site -->
+    <title>Studio Elidiane Monteiro</title>
+    <meta name="description" content="Agende seu horário online no Studio Elidiane Monteiro. Especialista em cabelos, mechas e sobrancelhas.">
+
+    <!-- Configurações para Compartilhamento (WhatsApp/Instagram/Facebook) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Studio Elidiane Monteiro | Agendamento Online" />
+    <meta property="og:description" content="Realce sua beleza! Clique aqui para ver nossos serviços e agendar seu horário com praticidade." />
+    <!-- Imagem de capa que aparece no WhatsApp (Imagem ilustrativa de salão) -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1000&auto=format&fit=crop" />
+    
+    <!-- Configurações de Web App (Android/iOS) -->
+    <meta name="theme-color" content="#f5f0eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="application-name" content="Studio Elidiane">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              studio: {
+                pink: '#eebbba', // Soft Pink
+                pinkDark: '#dca5a4',
+                beige: '#f5f0eb', // Beige background
+                gray: '#a8a29e',  // Light Gray text
+                dark: '#44403c',  // Dark Stone
+                gold: '#bfa05a',  // Gold accent
+              }
+            },
+            fontFamily: {
+              serif: ['"Playfair Display"', 'serif'],
+              sans: ['"Lato"', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom scrollbar for webkit */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f5f0eb;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #dca5a4;
+        border-radius: 3px;
+      }
+      /* Prevent pull-to-refresh on mobile to feel like app */
+      body {
+        overscroll-behavior-y: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.32.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^6.28.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "react": "https://esm.sh/react@^19.2.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-studio-beige text-studio-dark antialiased selection:bg-studio-pink selection:text-white">
+    <div id="root"></div>
+  </body>
+</html>

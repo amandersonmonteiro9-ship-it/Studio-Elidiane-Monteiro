@@ -1,0 +1,7 @@
+{
+  "name": "Studio Elidiane Monteiro",
+  "description": "Aplicativo de agendamento exclusivo para Studio Elidiane Monteiro, focado em beleza, sofisticação e praticidade.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
